@@ -1,5 +1,5 @@
 
-from config import connection_credential_path, user_table_name
+from config import connection_credential_path, database_name, user_table_name
 from connect import *
 
 # Set up the connection and initialize database and
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     crsr = connection.cursor()
 
     # If the database doesn't exist, create it.
-    sql_command = "CREATE DATABASE IF NOT EXISTS social_app;"
+    sql_command = f"CREATE DATABASE IF NOT EXISTS {database_name};"
     crsr.execute(sql_command)
 
     # Close the connection.
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # Restart the connection with database as selected database (e.g., social_app).
     credentials = read_credentials_from_file("../" + connection_credential_path)
-    connection = init_connection(credentials[0], credentials[1], credentials[2], "social_app")
+    connection = init_connection(credentials[0], credentials[1], credentials[2], database_name)
     crsr = connection.cursor()
 
     # Create user table doesn't exist, create it.

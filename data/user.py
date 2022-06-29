@@ -1,13 +1,13 @@
 
 from connect import *
-from config import connection_credential_path, user_table_name
+from config import connection_credential_path, database_name, user_table_name
 
 # Add a user to the database
 def add_user(username, first_name, last_name, password):
     
     # Create the connection.
     credentials = read_credentials_from_file("../" + connection_credential_path)
-    connection = init_connection(credentials[0], credentials[1], credentials[2], "social_app")
+    connection = init_connection(credentials[0], credentials[1], credentials[2], database_name)
     crsr = connection.cursor()
 
     # See if there is already a user with this username

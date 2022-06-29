@@ -13,5 +13,8 @@
 # User for creating and managing databases.
 connection_credential_path = "../user_credentials.txt"
 
+# Name of this social-app web app database
+database_name = "social_app"
+
 # Name of the database table holding the users (along with name, password, etc)
 user_table_name = "user"
