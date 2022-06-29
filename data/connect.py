@@ -2,11 +2,12 @@
 import mysql.connector
 
 # Create a connection to the database
-def init_connection(a_host, a_user, a_password):
+def init_connection(a_host, a_user, a_password, a_database = None):
     return mysql.connector.connect(
         host = a_host,
         user = a_user,
-        password = a_password
+        password = a_password,
+        database = a_database
     )
 
 # Read credentials from user credential file
