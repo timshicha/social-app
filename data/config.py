@@ -11,10 +11,19 @@
 
 # Path to file with connection credentials.
 # User for creating and managing databases.
-connection_credential_path = "../user_credentials.txt"
+CONNECTION_CREDENTIAL_PATH = "../user_credentials.txt"
 
 # Name of this social-app web app database
-database_name = "social_app"
+DATABASE_NAME = "social_app"
 
 # Name of the database table holding the users (along with name, password, etc)
-user_table_name = "user"
+USER_TABLE_NAME = "user"
+# Min and max length of username, name, etc.
+MIN_USERNAME_LENGTH = 1
+MAX_USERNAME_LENGTH = 50
+MIN_FIRST_NAME_LENGTH = 1
+MAX_FIRST_NAME_LENGTH = 50
+MIN_LAST_NAME_LENGTH = 0
+MAX_LAST_NAME_LENGTH = 50
+MIN_PASSWORD_LENGTH = 4
+MAX_PASSWOWRD_LENGTH = 50

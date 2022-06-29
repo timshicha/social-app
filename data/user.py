@@ -1,7 +1,7 @@
 
 from cmath import inf
+from config import *
 from connect import *
-from config import connection_credential_path, database_name, user_table_name
 
 
 
@@ -59,27 +59,27 @@ def add_user(username, first_name, last_name, password):
     password = str(password)
 
     # Make sure the user entered an appropriate username
-    if(validate_string(username, min_length=1, max_length=50, extra_legal_chars='_') == False):
+    if(validate_string(username, min_length=MIN_USERNAME_LENGTH, max_length=MAX_USERNAME_LENGTH, extra_legal_chars='_') == False):
         return -3
 
     # Make sure the user enetered an appropriate first and last name
-    if(validate_string(first_name, min_length=1, max_length=50, extra_legal_chars='-') == False or
-        validate_string(last_name, min_length=1, max_length=50, extra_legal_chars='-') == False):
+    if(validate_string(first_name, min_length=MIN_FIRST_NAME_LENGTH, max_length=MAX_FIRST_NAME_LENGTH, extra_legal_chars='-') == False or
+        validate_string(last_name, min_length=MIN_LAST_NAME_LENGTH, max_length=MAX_LAST_NAME_LENGTH, extra_legal_chars='-') == False):
         return -4
 
     # Make sure the user entered an appropriate password
-    if(is_password_appropriate(password, min_length=4, max_length=50) == False):
+    if(is_password_appropriate(password, min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWOWRD_LENGTH) == False):
         return -5
     
-    
+
     # Create the connection.
-    credentials = read_credentials_from_file("../" + connection_credential_path)
-    connection = init_connection(credentials[0], credentials[1], credentials[2], database_name)
+    credentials = read_credentials_from_file("../" + CONNECTION_CREDENTIAL_PATH)
+    connection = init_connection(credentials[0], credentials[1], credentials[2], DATABASE_NAME)
     crsr = connection.cursor()
 
     # See if there is already a user with this username
     sql_command = f"\
-        SELECT COUNT(*) FROM {user_table_name}\
+        SELECT COUNT(*) FROM {USER_TABLE_NAME}\
         WHERE username = '{username}';\
         "
     crsr.execute(sql_command)
@@ -97,7 +97,7 @@ def add_user(username, first_name, last_name, password):
     # If query ran and the username is unique, add the user
     else:
 
-        sql_command = f"INSERT INTO {user_table_name}\
+        sql_command = f"INSERT INTO {USER_TABLE_NAME}\
             VALUES ('{username}','{first_name}','{last_name}','{password}');"
         crsr.execute(sql_command)
         connection.commit()
