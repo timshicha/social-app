@@ -11,4 +11,7 @@
 
 # Path to file with connection credentials.
 # User for creating and managing databases.
-connection_credential_path = ""
+connection_credential_path = "../user_credentials.txt"
+
+# Name of the database table holding the users (along with name, password, etc)
+user_table_name = "user"

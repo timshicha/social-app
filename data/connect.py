@@ -16,7 +16,7 @@ def init_connection(a_host, a_user, a_password, a_database = None):
 # Second line => user
 # Third line => password
 def read_credentials_from_file(path):
-    credentials = ["","",""]
+    credentials = None
     
     with open(path) as reader:
         credentials = reader.readlines()

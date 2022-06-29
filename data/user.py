@@ -1,6 +1,6 @@
 
 from connect import *
-from config import connection_credential_path
+from config import connection_credential_path, user_table_name
 
 # Add a user to the database
 def add_user(username, first_name, last_name, password):
@@ -12,7 +12,7 @@ def add_user(username, first_name, last_name, password):
 
     # See if there is already a user with this username
     sql_command = f"\
-        SELECT COUNT(*) FROM user\
+        SELECT COUNT(*) FROM {user_table_name}\
         WHERE username = '{username}';\
         "
     crsr.execute(sql_command)
@@ -30,10 +30,12 @@ def add_user(username, first_name, last_name, password):
     # If query ran and the username is unique, add the user
     else:
 
-        sql_command = f"INSERT INTO user\
+        sql_command = f"INSERT INTO {user_table_name}\
             VALUES ('{username}','{first_name}','{last_name}','{password}');"
         crsr.execute(sql_command)
         connection.commit()
 
     crsr.close()
     connection.close()
+
+    return ret_code

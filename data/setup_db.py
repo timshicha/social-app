@@ -1,5 +1,5 @@
 
-from config import connection_credential_path
+from config import connection_credential_path, user_table_name
 from connect import *
 
 # Set up the connection and initialize database and
@@ -26,8 +26,8 @@ if __name__ == "__main__":
     crsr = connection.cursor()
 
     # Create user table doesn't exist, create it.
-    sql_command = "\
-        CREATE TABLE IF NOT EXISTS user (\
+    sql_command = f"\
+        CREATE TABLE IF NOT EXISTS {user_table_name} (\
             username VARCHAR(50) NOT NULL,\
             first VARCHAR(50),\
             last VARCHAR(50),\
