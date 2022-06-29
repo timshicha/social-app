@@ -8,6 +8,6 @@ from connect import *
 if __name__ == "__main__":
 
     # Read credential file and create connection
-    credentials = read_credentials_from_file(connection_credential_path)
+    credentials = read_credentials_from_file("../" + connection_credential_path)
     connection = init_connection(credentials[0], credentials[1], credentials[2])
     

@@ -18,6 +18,6 @@ def read_credentials_from_file(path):
     credentials = ["","",""]
     
     with open(path) as reader:
-        credentials = reader.read()
+        credentials = reader.readlines()
     
     return credentials
