@@ -1,4 +1,5 @@
 
+import sys
 from cmath import inf
 from config import *
 from connect import *
@@ -106,3 +107,25 @@ def add_user(username, first_name, last_name, password):
     connection.close()
 
     return ret_code
+
+
+if __name__ == "__main__":
+
+    # Require an argument (i.e., specify which function to call)
+    if(len(sys.argv) < 2):
+        print("<Error: cmd argument required>")
+        exit()
+    
+    # Retrieve the function to call
+    func = str(sys.argv[1])
+
+    if(func == 'add_user'):
+        # Require 4 more args
+        if(len(sys.argv) != 6):
+            print("<Error: wrong number of args for add_user call>")
+            exit()
+        
+        # Otherwise add the user
+        result = add_user(sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+    
+    print(result)
