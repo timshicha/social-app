@@ -5,6 +5,17 @@ from config import *
 from connect import *
 from parsing_tools import ascii_string_to_string as to_str
 
+FUNCTION_RAN_SUCCESSFULLY = 0
+NO_FUNCTION_SPECIFIED_ERROR = 1
+FUNCTION_DOESNT_EXIST_ERROR = 2
+WRONG_NUMBER_OF_ARGS_ERROR = 3
+# What gets printed:
+# 0 => command ran successfully
+# 1 => no function specified (no cmd args)
+# 2 => function that was specific doesn't exist
+# 3 => function found, but wrong number of args provided
+# a negative number => function specific error (please read function error codes).
+
 
 # See whether the passed username is valid (can be created).
 # Requires string to be a string (str).
@@ -85,7 +96,8 @@ def add_user(username, first_name, last_name, password):
         "
     crsr.execute(sql_command)
     res = crsr.fetchone()
-    ret_code = 0
+
+    ret_code = FUNCTION_RAN_SUCCESSFULLY
 
     # If we weren't able to get a result
     if(res == None or len(res) == 0):
@@ -109,11 +121,17 @@ def add_user(username, first_name, last_name, password):
     return ret_code
 
 
+# What gets printed:
+# 0 => command ran successfully
+# 1 => no function specified (no cmd args)
+# 2 => function that was specific doesn't exist
+# 3 => function found, but wrong number of args provided
+# a negative number => function specific error (please read function error codes).
 if __name__ == "__main__":
 
     # Require an argument (i.e., specify which function to call)
     if(len(sys.argv) < 2):
-        print("<Error: cmd argument required>")
+        print(NO_FUNCTION_SPECIFIED_ERROR)
         exit()
     
     # Retrieve the function to call
@@ -122,11 +140,11 @@ if __name__ == "__main__":
     if(func == 'add_user'):
         # Require 4 more args
         if(len(sys.argv) != 6):
-            print("<Error: wrong number of args for add_user call>")
+            print(WRONG_NUMBER_OF_ARGS_ERROR)
             exit()
         
         # Otherwise add the user.
         # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
-        result = add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), to_str(sys.argv[5]))
+        print(add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), to_str(sys.argv[5])))
     
-    print(result)
+    print(FUNCTION_DOESNT_EXIST_ERROR)
