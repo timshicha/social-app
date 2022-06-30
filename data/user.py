@@ -126,6 +126,6 @@ if __name__ == "__main__":
             exit()
         
         # Otherwise add the user
-        result = add_user(sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+        result = add_user(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
     
     print(result)
