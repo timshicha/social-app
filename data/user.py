@@ -3,7 +3,7 @@ import sys
 from cmath import inf
 from config import *
 from connect import *
-
+from parsing_tools import ascii_string_to_string as to_str
 
 
 # See whether the passed username is valid (can be created).
@@ -125,7 +125,8 @@ if __name__ == "__main__":
             print("<Error: wrong number of args for add_user call>")
             exit()
         
-        # Otherwise add the user
-        result = add_user(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+        # Otherwise add the user.
+        # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
+        result = add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), to_str(sys.argv[5]))
     
     print(result)
