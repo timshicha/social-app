@@ -76,11 +76,11 @@ def add_user(username, first_name, last_name, password):
 
     # Make sure the user enetered an appropriate first and last name
     if(validate_string(first_name, min_length=MIN_FIRST_NAME_LENGTH, max_length=MAX_FIRST_NAME_LENGTH, extra_legal_chars='-') == False or
-        validate_string(last_name, min_length=(MIN_LAST_NAME_LENGTH * 4), max_length=(MAX_LAST_NAME_LENGTH * 4), extra_legal_chars='-') == False):
+        validate_string(last_name, min_length=MIN_LAST_NAME_LENGTH, max_length=MAX_LAST_NAME_LENGTH, extra_legal_chars='-') == False):
         return -4
 
     # Make sure the user entered an appropriate password
-    if(is_password_appropriate(password, min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWOWRD_LENGTH) == False):
+    if(is_password_appropriate(password, min_length=(MIN_PASSWORD_LENGTH * 4), max_length=(MAX_PASSWOWRD_LENGTH * 4)) == False):
         return -5
     
 
