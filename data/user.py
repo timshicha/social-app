@@ -145,6 +145,7 @@ if __name__ == "__main__":
         
         # Otherwise add the user.
         # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
-        print(add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), to_str(sys.argv[5])))
+        # Note: password will stay as an ascii string so it's properly stores into SQL.
+        print(add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), sys.argv[5]))
     
     print(FUNCTION_DOESNT_EXIST_ERROR)
