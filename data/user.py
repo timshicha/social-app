@@ -9,6 +9,7 @@ FUNCTION_RAN_SUCCESSFULLY = 0
 NO_FUNCTION_SPECIFIED_ERROR = 1
 FUNCTION_DOESNT_EXIST_ERROR = 2
 WRONG_NUMBER_OF_ARGS_ERROR = 3
+
 # What gets printed:
 # 0 => command ran successfully
 # 1 => no function specified (no cmd args)
@@ -80,7 +81,7 @@ def add_user(username, first_name, last_name, password):
         return -4
 
     # Make sure the user entered an appropriate password
-    if(is_password_appropriate(password, min_length=(MIN_PASSWORD_LENGTH * 4), max_length=(MAX_PASSWOWRD_LENGTH * 4)) == False):
+    if(is_password_appropriate(password, min_length=(MIN_PASSWORD_LENGTH * 4 - 1), max_length=(MAX_PASSWOWRD_LENGTH * 4)) == False):
         return -5
     
 
@@ -92,8 +93,8 @@ def add_user(username, first_name, last_name, password):
     # See if there is already a user with this username
     sql_command = f"\
         SELECT COUNT(*) FROM {USER_TABLE_NAME}\
-        WHERE username = '{username}';\
-        "
+        WHERE username = '{username}';"
+
     crsr.execute(sql_command)
     res = crsr.fetchone()
 
@@ -121,6 +122,66 @@ def add_user(username, first_name, last_name, password):
     return ret_code
 
 
+# Validate user login.
+#
+# Takes a username and ascii-encoded password.
+# Returns true if login successful, false if failed.
+#
+# Return codes
+# 0 => no error (successful login)
+# -1 => username doesn't exist
+# -2 => username exists but doesn't match the username
+def login_user(username, password):
+
+    username = str(username)
+    password = str(password)
+
+    # If there are bad characters in the username, the SQL queries may break. So, if
+    # bad characters are detected, return a non-existent username right away.
+    if(validate_string(username) == False):
+        # Non-existent username error
+        return -1
+
+    # Create the connection.
+    credentials = read_credentials_from_file("../" + CONNECTION_CREDENTIAL_PATH)
+    connection = init_connection(credentials[0], credentials[1], credentials[2], DATABASE_NAME)
+    crsr = connection.cursor()
+
+    # See if there is a user with this username in the database.
+    sql_command = f"\
+        SELECT COUNT(*) FROM {USER_TABLE_NAME}\
+        WHERE username = '{username}';"
+
+    crsr.execute(sql_command)
+    res = int(crsr.fetchone()[0]) # 'res' holds the value of COUNT(*) from SQL
+
+    ret_code = 0
+
+    # If there is no user with this name...
+    if(res == 0):
+        ret_code = -1
+    # Otherwise, see if the password matches...
+    else:
+        sql_command = f"\
+            SELECT COUNT(*) FROM {USER_TABLE_NAME}\
+            WHERE username = '{username}' AND password = '{password}';"
+        
+        crsr.execute(sql_command)
+        res = int(crsr.fetchone()[0])
+
+        # If the password didn't match with the username...
+        if(res == 0):
+            ret_code = -2
+        # Otherwise the username exists in database and password matches,
+        # so 'ret_code' can remain 0 (success).
+    
+    crsr.close()
+    connection.close()
+        
+    return ret_code
+
+
+
 # What gets printed:
 # 0 => command ran successfully
 # 1 => no function specified (no cmd args)
@@ -137,6 +198,7 @@ if __name__ == "__main__":
     # Retrieve the function to call
     func = str(sys.argv[1])
 
+    # Add a user to the database.
     if(func == 'add_user'):
         # Require 4 more args
         if(len(sys.argv) != 6):
@@ -147,5 +209,17 @@ if __name__ == "__main__":
         # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
         # Note: password will stay as an ascii string so it's properly stores into SQL.
         print(add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), sys.argv[5]))
-    
-    print(FUNCTION_DOESNT_EXIST_ERROR)
+
+    # Validate a user in the database (username and password).
+    elif(func == 'login_user'):
+        # Require 2 more args
+        if(len(sys.argv) != 4):
+            print(WRONG_NUMBER_OF_ARGS_ERROR)
+            exit()
+
+        # Otherwise attempt to log the user in.
+        print(login_user(to_str(sys.argv[2]), sys.argv[3]))
+
+    # If function wasn't found
+    else:
+        print(FUNCTION_DOESNT_EXIST_ERROR)
