@@ -26,12 +26,13 @@ if __name__ == "__main__":
     crsr = connection.cursor()
 
     # Create user table doesn't exist, create it.
+    # Note: max password length is multiplied by 4 since it will be stored in ascii.
     sql_command = f"\
         CREATE TABLE IF NOT EXISTS {USER_TABLE_NAME} (\
-            username VARCHAR(50) NOT NULL,\
-            first VARCHAR(50),\
-            last VARCHAR(50),\
-            password VARCHAR(50),\
+            username VARCHAR({MAX_USERNAME_LENGTH}) NOT NULL,\
+            first VARCHAR({MAX_FIRST_NAME_LENGTH}),\
+            last VARCHAR({MAX_LAST_NAME_LENGTH}),\
+            password VARCHAR({MAX_PASSWOWRD_LENGTH * 4}),\
             PRIMARY KEY (username)\
         );"
     crsr.execute(sql_command)
