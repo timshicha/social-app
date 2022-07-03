@@ -8,6 +8,9 @@
 #
 # May be specific to each user.
 
+# For functions that return error codes, a return code of 25
+# means success.
+SUCCESS_CODE = 25
 
 # Path to file with connection credentials.
 # User for creating and managing databases.

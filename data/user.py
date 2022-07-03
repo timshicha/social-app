@@ -5,13 +5,12 @@ from config import *
 from connect import *
 from parsing_tools import ascii_string_to_string as to_str
 
-FUNCTION_RAN_SUCCESSFULLY = 0
 NO_FUNCTION_SPECIFIED_ERROR = 1
 FUNCTION_DOESNT_EXIST_ERROR = 2
 WRONG_NUMBER_OF_ARGS_ERROR = 3
 
 # What gets printed:
-# 0 => command ran successfully
+# SUCCESS_CODE (see config file) => command ran successfully
 # 1 => no function specified (no cmd args)
 # 2 => function that was specific doesn't exist
 # 3 => function found, but wrong number of args provided
@@ -98,7 +97,7 @@ def add_user(username, first_name, last_name, password):
     crsr.execute(sql_command)
     res = crsr.fetchone()
 
-    ret_code = FUNCTION_RAN_SUCCESSFULLY
+    ret_code = 0
 
     # If we weren't able to get a result
     if(res == None or len(res) == 0):
@@ -115,6 +114,7 @@ def add_user(username, first_name, last_name, password):
             VALUES ('{username}','{first_name}','{last_name}','{password}');"
         crsr.execute(sql_command)
         connection.commit()
+        ret_code = SUCCESS_CODE
 
     crsr.close()
     connection.close()
@@ -155,13 +155,11 @@ def login_user(username, password):
     crsr.execute(sql_command)
     res = int(crsr.fetchone()[0]) # 'res' holds the value of COUNT(*) from SQL
 
-    ret_code = 0
+    # Assume no user with this username
+    ret_code = -1
 
-    # If there is no user with this name...
-    if(res == 0):
-        ret_code = -1
-    # Otherwise, see if the password matches...
-    else:
+    # If there is a user with this username
+    if(res != 0):
         sql_command = f"\
             SELECT COUNT(*) FROM {USER_TABLE_NAME}\
             WHERE username = '{username}' AND password = '{password}';"
@@ -173,7 +171,9 @@ def login_user(username, password):
         if(res == 0):
             ret_code = -2
         # Otherwise the username exists in database and password matches,
-        # so 'ret_code' can remain 0 (success).
+        # so return success.
+        else:
+            ret_code = SUCCESS_CODE
     
     crsr.close()
     connection.close()
@@ -188,38 +188,44 @@ def login_user(username, password):
 # 2 => function that was specific doesn't exist
 # 3 => function found, but wrong number of args provided
 # a negative number => function specific error (please read function error codes).
+ret_code = NO_FUNCTION_SPECIFIED_ERROR
 if __name__ == "__main__":
 
     # Require an argument (i.e., specify which function to call)
     if(len(sys.argv) < 2):
-        print(NO_FUNCTION_SPECIFIED_ERROR)
-        exit()
+        ret_code = NO_FUNCTION_SPECIFIED_ERROR
     
-    # Retrieve the function to call
-    func = str(sys.argv[1])
-
-    # Add a user to the database.
-    if(func == 'add_user'):
-        # Require 4 more args
-        if(len(sys.argv) != 6):
-            print(WRONG_NUMBER_OF_ARGS_ERROR)
-            exit()
-        
-        # Otherwise add the user.
-        # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
-        # Note: password will stay as an ascii string so it's properly stores into SQL.
-        print(add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), sys.argv[5]))
-
-    # Validate a user in the database (username and password).
-    elif(func == 'login_user'):
-        # Require 2 more args
-        if(len(sys.argv) != 4):
-            print(WRONG_NUMBER_OF_ARGS_ERROR)
-            exit()
-
-        # Otherwise attempt to log the user in.
-        print(login_user(to_str(sys.argv[2]), sys.argv[3]))
-
-    # If function wasn't found
+    # If a function was specified...
     else:
-        print(FUNCTION_DOESNT_EXIST_ERROR)
+        # Retrieve the function to call
+        func = str(sys.argv[1])
+
+        # Add a user to the database.
+        if(func == 'add_user'):
+            # Require 4 more args
+            if(len(sys.argv) != 6):
+                ret_code = WRONG_NUMBER_OF_ARGS_ERROR
+            
+            # Otherwise add the user.
+            # Note: to_str() converts string of ascii values into a proper string (see parsing_tools.py).
+            # Note: password will stay as an ascii string so it's properly stores into SQL.
+            else:
+                ret_code = add_user(to_str(sys.argv[2]), to_str(sys.argv[3]), to_str(sys.argv[4]), sys.argv[5])
+
+        # Validate a user in the database (username and password).
+        elif(func == 'login_user'):
+            # Require 2 more args
+            if(len(sys.argv) != 4):
+                ret_code = WRONG_NUMBER_OF_ARGS_ERROR
+
+            # Otherwise attempt to log the user in.
+            else:
+                ret_code = login_user(to_str(sys.argv[2]), sys.argv[3])
+
+        # If function wasn't found
+        else:
+            ret_code = FUNCTION_DOESNT_EXIST_ERROR
+    
+
+    # What do do with return code:
+    print(ret_code) # Just print it
