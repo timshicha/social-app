@@ -65,7 +65,7 @@ def is_password_appropriate(password, min_length = 0, max_length = inf):
 def add_user(username, first_name, last_name, password):
 
     # Convert to strings for security (and avoid crashes).
-    username = str(username)
+    username = str(username).lower() # Usernames will have no capital letters
     first_name = str(first_name)
     last_name = str(last_name)
     password = str(password)
@@ -133,7 +133,7 @@ def add_user(username, first_name, last_name, password):
 # -2 => username exists but doesn't match the username
 def login_user(username, password):
 
-    username = str(username)
+    username = str(username).lower() # Usernames will have no capital letters
     password = str(password)
 
     # If there are bad characters in the username, the SQL queries may break. So, if
