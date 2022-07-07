@@ -1,7 +1,10 @@
 <?php
 
-// Converts a string to ascii values seperated with dashes
-// Example: "string" -> "115-116-114-105-110-103"
+// Converts a string to an ascii string. Each character in the
+// string is converted into a 3 digit ascii string and combined
+// to represent the total string.
+//
+// Example: "string" -> "115116114105110103"
 function str_to_ascii($str)
 {
     $ascii_str = "";
@@ -23,14 +26,9 @@ function str_to_ascii($str)
 
         // Add the ascii value to the total ascii string
         $ascii_str .= $to_add;
-
-        // Add delimiter
-        if($i != $len - 1)
-            $ascii_str .= '-';
     }
 
     return $ascii_str;
 }
-
 
 ?>

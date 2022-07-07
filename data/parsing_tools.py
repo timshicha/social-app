@@ -14,8 +14,9 @@ def ascii_string_to_string(ascii_string):
     if(ascii_string == None):
         return ""
 
-    # Get a list of ascii values
-    ascii_string = ascii_string.split('-')
+    # Break the string into chunks, where each chunck is an ascii value as
+    # a string.
+    ascii_string = [ascii_string[i:i+3] for i in range(0, len(ascii_string), 3)]
 
     # Store result into a string
     string = ""

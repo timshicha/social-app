@@ -80,7 +80,7 @@ def add_user(username, first_name, last_name, password):
         return -4
 
     # Make sure the user entered an appropriate password
-    if(is_password_appropriate(password, min_length=(MIN_PASSWORD_LENGTH * 4 - 1), max_length=(MAX_PASSWOWRD_LENGTH * 4)) == False):
+    if(is_password_appropriate(password, min_length=(MIN_PASSWORD_LENGTH * 3), max_length=(MAX_PASSWOWRD_LENGTH * 3)) == False):
         return -5
     
 
