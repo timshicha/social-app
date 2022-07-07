@@ -27,3 +27,22 @@ function login()
         }
     });
 }
+
+function getStatus()
+{
+    $.ajax
+    ({
+        type: 'post',
+        url: "../load_home.php",
+        dataType: 'text',
+        data:
+        {
+            "username": sessionStorage.getItem("username"),
+            "token": sessionStorage.getItem("token")
+        },
+        success: function(response)
+        {
+            alert(response);
+        }
+    });
+}
