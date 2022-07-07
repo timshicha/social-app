@@ -15,6 +15,7 @@ $return_data = array($result, "");
 if($result == $SUCCESS_CODE)
 {
     session_start();
+    $_SESSION["username"] = $_POST["username"]; // Store username in session
     $return_data[1] = session_id(); // Return the session ID back to JS
 }
 
