@@ -12,6 +12,7 @@ $FAIL_CODE = -1;
 
 function validate_user($username, $token)
 {
+    global $SUCCESS_CODE, $FAIL_CODE;
     // If a session wasn't started
     if(session_id() == "")
     {
@@ -19,7 +20,7 @@ function validate_user($username, $token)
     }
 
     // Make sure the session actually has the username and token keys set
-    if(isset("username", $_SESSION) == false || isset("token", $_SESSION) == false)
+    if(isset($_SESSION["username"]) == false || isset($_SESSION["token"]) == false)
     {
         return $FAIL_CODE; // Return fail
     }

@@ -16,6 +16,14 @@ function login()
         success: function(response)
         {
             alert(response);
+
+            let result = JSON.parse(response);
+
+            if(parseInt(result[0]) == 25)
+            {
+                sessionStorage.setItem("username", usernameInput.value);
+                sessionStorage.setItem("token", result[1]);
+            }
         }
     });
 }
